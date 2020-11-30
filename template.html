@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        background-color: #2C2A37;
+    }
+
+    H1 {
+        color: #FFFFFF;
+        font-size: 18px;
+    }
+
+    Img {
+        width: 130px;
+        height: 130px;
+    }
+
+    #captchaContainer {
+        color: #FFFFFF;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .error {
+        font-weight: bold;
+        color: red;
+    }
+</style>
+  </head>
+<body id="cf-captcha">
+        <h1>websiteName</h1>
+        <div id="captchaContainer">Please wait</div>
+
+        <script src="https://static.geetest.com/static/tools/gt.js"></script>
+        <script>
+            function onInit(captchaObj) {
+                document.getElementById("captchaContainer").innerHTML = '';
+
+                captchaObj.appendTo("#captchaContainer");
+
+                captchaObj.onSuccess(function () {
+                    var result = captchaObj.getValidate();
+                    let el = document.createElement('textarea');
+                    el.value = JSON.stringify(result);
+                    el.id = "results";
+                    document.body.appendChild(el);
+                    // window.Solver.ExtractToken('challenge=' + result.geetest_challenge + '&validate=' + result.geetest_validate + '&seccode=' + result.geetest_seccode);
+                });
+                captchaObj.onError(function (e) {
+                    let el = document.createElement('textarea');
+                    el.value = "errorss";
+                    el.id = "errorss";
+                    document.body.appendChild(el);
+                });
+            }
+
+            initGeetest({
+                api_server: 'api-na.geetest.com',
+                gt: '{{gt}}',
+                challenge: '{{challenge}}',
+                offline:  0 ,
+                new_captcha: 1,
+                lang: 'en-us'
+            }, onInit)
+        </script>
+</body>
+
+</html>
