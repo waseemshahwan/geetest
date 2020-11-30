@@ -9,10 +9,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "playwright": "^1.6.2"
+    "njwt": "^1.0.0",
+    "playwright": "^1.6.2",
+    "uuid": "^8.3.1"
   },
   "dependencies": {
+    "axios": "^0.21.0",
     "jimp": "^0.16.1",
+    "node-fetch": "^2.6.1",
     "opencv-wasm": "^4.3.0-5",
     "pixelmatch": "^5.2.1",
     "proxy-chain": "^0.4.6",
