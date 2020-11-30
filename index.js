@@ -100,11 +100,10 @@ async function saveDiffImage(d_images) {
     const diffOptions = { includeAA: true, threshold: 0.2 }
 
     pixelmatch(originalImage.bitmap.data, captchaImage.bitmap.data, diffImage.bitmap.data, width, height, diffOptions)
-    diffImage.write('./diff.png')
     return diffImage;
 }
 
-async function Solve (ip, gt, challenge, url) {
+async function Solve (ip, gt, challenge, url, apiServer) {
     
     let proxy;
     if(ip) {
@@ -123,6 +122,7 @@ async function Solve (ip, gt, challenge, url) {
     let template = TEMPLATE;
     template = template.replace('{{gt}}', gt);
     template = template.replace('{{challenge}}', challenge);
+    template = template.replace('{{api_server}}', apiServer);
 
     await page.route("**", route => {
     
@@ -175,14 +175,12 @@ async function Solve (ip, gt, challenge, url) {
             await page.mouse.move(xPosition, yPosition, { steps: 15 })
             await page.mouse.up()
 
-            await browser.close()
-
         })
     )
 
     let result = await Promise.race([
         new Promise(async (resolve, reject) => {
-            await page.waitForSelector('#results', { visible: true });
+            await page.waitForSelector('#results', { visible: true, timeout: 100000 });
             let result = await page.evaluate(_ => {
                 let r = window.document.getElementById('results');
                 let val = r.value;
@@ -201,15 +199,17 @@ async function Solve (ip, gt, challenge, url) {
     return result;
 }
 
-if(!argv.gt || !argv.challenge || !argv.url || !argv.auth) {
+if(!argv.gt || !argv.challenge || !argv.url || !argv.auth || !argv.server) {
     throw new Error('Bad arguments');
 }
 
 let usedProxy = argv.proxy || null;
-Solve(usedProxy, argv.gt, argv.challenge, argv.url)
+Solve(usedProxy, argv.gt, argv.challenge, argv.url, argv.server)
     .then(result => console.log(JSON.stringify(result)))
+    .then(() => process.exit())
     .catch(e => {
         console.log(JSON.stringify({
             error: e.message
         }))
+        process.exit();
     });
