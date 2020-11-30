@@ -110,7 +110,7 @@ async function Solve (ip, gt, challenge, url, apiServer) {
         proxy = await ProxyChain.anonymizeProxy(ip);
     }
 
-    const browser = await puppeteer.chromium.launch({
+    const browser = await puppeteer.webkit.launch({
         headless: false,
         defaultViewport: { width: 1366, height: 768 }
     })
@@ -168,11 +168,16 @@ async function Solve (ip, gt, challenge, url, apiServer) {
 
             await page.waitFor(100)
 
+            console.log("Finding puzzle position");
             let [cxPuzzle, cyPuzzle] = await findPuzzlePosition(page)
+
+            console.log("Moving there");
 
             xPosition = xPosition + cx - cxPuzzle
             yPosition = handle.y + handle.height / 2
             await page.mouse.move(xPosition, yPosition, { steps: 15 })
+            console.log("Releasing mouse (1 second)");
+            await new Promise(r => setTimeout(r, 1000));
             await page.mouse.up()
 
         })

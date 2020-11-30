@@ -1,0 +1,1 @@
+node index.js --challenge=404dd8ed2bbce5577241dd47865e2f77 --gt=1e505deed3832c02c96ca5abe70df9ab --server=api-na.geetest.com --url=https://geo.captcha-delivery.com --auth=whatever
