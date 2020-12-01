@@ -296,7 +296,12 @@ async function Solve (ip, gt, challenge, url, apiServer, headless = true, auth) 
                 await page.mouse.up()
 
             })
-        )
+        ).catch(err => {
+            console.info(JSON.stringify({
+                error: err.message
+            }));
+            process.exit();
+        })
 
         let result = await Promise.race([
             new Promise(async (resolve, reject) => {
@@ -319,7 +324,7 @@ async function Solve (ip, gt, challenge, url, apiServer, headless = true, auth) 
         return result;
 
     }catch(err) {
-        console.log(err);
+        console.info(JSON.stringify({ error: err.message }));
         process.exit(1);
     }
    
@@ -338,7 +343,7 @@ Solve(usedProxy, argv.gt, argv.challenge, argv.url, argv.server, headless, argv.
     .then(result => console.info(JSON.stringify(result)))
     .then(() => process.exit())
     .catch(e => {
-        console.log(JSON.stringify({
+        console.info(JSON.stringify({
             error: e.message
         }))
         process.exit();
